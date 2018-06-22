@@ -4,10 +4,7 @@ mongoose.Promise = global.Promise;
 
 
 mongoose.connect(
-    process.env.MONGODB_URI || "mongodb://localhost/NPRreact",
-    {
-      useMongoClient: true
-    }
+    process.env.MONGODB_URI || "mongodb://localhost/nprreactexpress"
   );
 
  const articleSeed=[
