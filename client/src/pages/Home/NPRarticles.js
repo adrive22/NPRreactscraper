@@ -6,7 +6,8 @@ import Container from "../../components/Container/Container";
 //import ArticleResults from "../../components/ArticlesResults/articleResults";
 //import Search from "../../components/Search/Search";
 import { Input, TextArea, FormBtn } from "../../components/Form";
-import { List, ListItem } from "../../components/List";
+import { SaveArticleBtn, List, ListItem } from "../../components/List";
+
 
 
 class NPRarticles extends Component{
@@ -14,28 +15,27 @@ class NPRarticles extends Component{
  state={
      articles:[],
      title:"",
-     date:""
+     date:"",
+     link:""
  };
  
- componentDidMount = () => {
-    API.scrapeArticles()
-    .then(this.loadArticles())
-    //.then(console.log("mwahahaha"))
-      
-     //this.loadArticles();
-  
- }
+ //componentDidMount = () => {
+  //  API.scrapeArticles()
+  //  .then(this.loadArticles())
+ //}
 
  loadArticles = () => {
-     API.getArticles()
-     .then(res => console.log(res.data))
-    // .then(res => this.setState({ articles: res.data}))
+     API.getSaved()
+     //.then(res => console.log(res.data))
+     .then(res => this.setState({ articles: res.data}))
 
      .catch(err => console.log(err));
      
  };
 
- handleInputChange = event => {
+
+
+ handleInputChange = (event,id) => {
     const { name, value } = event.target;
     this.setState({ 
         [name]: value
@@ -43,10 +43,23 @@ class NPRarticles extends Component{
     console.log(this.state);
  };
 
+
+
+saveArticle = article => {
+  API.saveArticle({
+            title: this.state.title,
+            date: this.state.date,
+            link: this.state.link
+          })
+  .then(alert('Article saved!'))
+  .catch(err => console.log(err));
+}
+
  handleFormSubmit = event => {
+  API.scrapeArticles();
     event.preventDefault();
     if (this.state.title && this.state.date) {
-      API.getArticles({
+      API.saveArticle({
         title: this.state.title,
         date: this.state.date,
         link: this.state.link
@@ -60,7 +73,6 @@ class NPRarticles extends Component{
  render(){
      return(
          <Container>
-            <Nav />
             <Header/>
             <form>
                 <Input
@@ -79,17 +91,18 @@ class NPRarticles extends Component{
                     onClick={this.handleFormSubmit}
                 />
             </form>
+            
             {this.state.articles.length ? (
               <List>
                 {this.state.articles.map(articles => {
                   return (
                     <ListItem key={articles._id}>
-                      <a href={"/article/id" + articles._id}>
+                      <a href={"/article/" + articles.link}>
                         <strong>
-                          {articles.title} by {articles.author}
+                          {articles.title} by {articles.date}
                         </strong>
                       </a>
-                     
+                    
                     </ListItem>
                   );
                 })}

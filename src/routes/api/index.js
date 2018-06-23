@@ -4,7 +4,7 @@ const request = require('request');
 const cheerio = require('cheerio');
 const db = require('../../models');
 
-router.use("/article", articleRoutes);
+router.use("/saved", articleRoutes);
 
 router.get("/scrape", function (req, res) {
     
@@ -15,7 +15,7 @@ router.get("/scrape", function (req, res) {
         var $ = cheerio.load(html);
 
 
-        $(".title").each(function (i, element) {
+        $(".title").each(function (i, element, props) {
             //save an empty result object 
             var result = {};
 
@@ -24,6 +24,7 @@ router.get("/scrape", function (req, res) {
             result.link = $(this).children("a").attr("href");
             result.date = Date(Date.now());
 
+
             db.Article.find({link: result.link}).then(data => {
                 console.log(data);
                 if( data.length ){
@@ -31,13 +32,17 @@ router.get("/scrape", function (req, res) {
                     
                 }
                 else {
-                    db.Article.create(result)
-                    .then(function (dbArticle) {
-                        console.log(dbArticle);
-                    })
-                    .catch(function (err) {
-                        return res.json(err);
-                    });
+                    if(props.title===result.title){
+                        console.log("woooo");
+                        db.Article.create(result)
+                        .then(function (dbArticle) {
+                            console.log(dbArticle);
+                        })
+                        .catch(function (err) {
+                            return res.json(err);
+                        });
+                    }
+                    
                 }
             })
         });
