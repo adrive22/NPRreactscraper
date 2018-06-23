@@ -1,21 +1,39 @@
 import React from "react";
 
-const Search = () => (
+const Search = (props) => (
 
-<form>
+
+<p>
   <div className="form-group">
     <label for="exampleInputEmail1">Topic</label>
-    <input type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Topic"></input>
+    <input type="text" className="form-control" id="topic" aria-describedby="emailHelp" placeholder="Topic"></input>
   </div>
   <p>OR</p>
   <div className="form-group">
     <label for="exampleInputPassword1">Date</label>
-    <input type="password" className="form-control" id="exampleInputPassword1" placeholder="Date"></input>
+    <input type="text" className="form-control" id="date" placeholder="Date"></input>
   </div>
-  <button type="submit" className="btn btn-primary">Submit</button>
-</form>
+  
+
+  <button  className="btn btn-primary" onClick={() => props.loadArticles()}>Search Articles</button>
+
+<div className="container">
+<div className="articleResults" id={props.id}>
+<h3 className="articleHeadline">{props.title}</h3>
+<h4> Date: {props.date}</h4>
+<button type="button" className="btn btn-warning">Save Article</button>
+</div>
+</div>
+</p>
+
+
 
 )
 
 export default Search;
 
+//handleinputchange pass the topic and date into the load article function.
+
+
+
+<Search loadArticles={this.loadArticles}/> 

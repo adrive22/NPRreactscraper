@@ -2,6 +2,11 @@ import axios from "axios";
 
 export default {
     //gets all articles
+
+    scrapeArticles: function(){
+        return axios.get("/api/scrape");
+    },
+
     getArticles: function(){
         return axios.get("/api/article");
     },

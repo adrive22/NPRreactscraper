@@ -7,7 +7,8 @@ const db = require('../../models');
 router.use("/article", articleRoutes);
 
 router.get("/scrape", function (req, res) {
-
+    
+ 
     request("https://www.npr.org/sections/news/", function (error, response, html) {
         console.log(html);
         //set up cheerio request for the html into a variable
@@ -21,11 +22,13 @@ router.get("/scrape", function (req, res) {
             //adding the text and href of every link and save them as properties of the result object
             result.title = $(this).children("a").text();
             result.link = $(this).children("a").attr("href");
-            result.date = Date.now();
+            result.date = Date(Date.now());
 
             db.Article.find({link: result.link}).then(data => {
+                console.log(data);
                 if( data.length ){
-                    // do nothing
+                    console.log("no new articles");
+                    
                 }
                 else {
                     db.Article.create(result)
@@ -40,6 +43,6 @@ router.get("/scrape", function (req, res) {
         });
 
     });
-})
+ })
 
 module.exports = router;
